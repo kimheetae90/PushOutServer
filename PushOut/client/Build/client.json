@@ -1,0 +1,16 @@
+{
+"companyName": "kimi10",
+"productName": "PushOut",
+"productVersion": "1.0",
+"dataUrl": "client.data.unityweb",
+"wasmCodeUrl": "client.wasm.code.unityweb",
+"wasmFrameworkUrl": "client.wasm.framework.unityweb",
+"graphicsAPI": ["WebGL 2.0","WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Light",
+"backgroundColor": "#828080",
+"cacheControl": {"default": "must-revalidate"},
+"developmentBuild": false,
+"multithreading": false,
+"unityVersion": "2019.2.9f1"
+}
