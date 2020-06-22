@@ -526,7 +526,7 @@ io.on('connection', function (socket) {
 		if (enterEntity == null)
 			return;
 		if (gameRoom.password == password) {
-			gameRoom.Enter(entferEntity);
+			gameRoom.Enter(enterEntity);
 		}
 		else {
 			socket.emit('ErrorS2C', { 'message': ERROR_ENTER_WRONG_PASSWORD });							
