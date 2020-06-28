@@ -3,8 +3,8 @@ var app = express();
 var packageJson = require('./package.json');
 var server = require('http').Server(app);
 var io = require('socket.io')(server, {
-	pingInterval: 25000,
-	pingTimeout: 60000,});
+	pingInterval: 30000,
+	pingTimeout: 90000,});
 
 //app.use(express.static(__dirname + '/client'));
 //app.get('/',function(req, res) { res.sendfile(__dirname + '/index.html'); });
@@ -16,7 +16,7 @@ server.listen(3000);
 let VERSION = packageJson.version;
 
 let MAX_ROOM_MEMBER_COUNT = 5;
-let MAX_ROOM_COUNT = 500;
+let MAX_ROOM_COUNT = 300;
 let TICK_PER_FRAME = 33;
 let PUSHOUTFORCE_POOL_SIZE = 400;
 let MAX_PUSHOUT_FORCE = 1.1;
@@ -181,6 +181,7 @@ class PushOutForce{
 class GameRoom {
 	constructor(roomNum) {
 		this.roomNum = roomNum;
+		this.password = -1;
 		this.memberCount = 0;
 		this.entities = new Map();
 		this.currentPushOutList = [];
@@ -358,20 +359,13 @@ class GameRoom {
 
 		var roomInfo =
 		{
-			'roomNum' : this.roomNum,
+			'roomNum': this.roomNum,
+			'password': this.password,
 			'memberInfo' : memberInfoData,
 			'nickname' : nicknameData,
 		}
 
 		return roomInfo;
-	}
-}
-
-class PrivateGameRoom extends GameRoom {
-	constructor(roomNum)
-	{
-		super(roomNum);
-		this.password = 0;
 	}
 }
 
@@ -383,7 +377,7 @@ for (var i = 0; i < MAX_ROOM_COUNT; i++) {
 	var newRoom = new GameRoom(i);
 	GameRooms.set(i, newRoom);
 
-	var newRoom = new PrivateGameRoom(i + MAX_ROOM_COUNT);
+	var newRoom = new GameRoom(i + MAX_ROOM_COUNT);
 	PrivateGameRooms.set(i + MAX_ROOM_COUNT, newRoom);
 }
 
@@ -670,6 +664,10 @@ io.on('connection', function (socket) {
 
 		socket.emit('ServerMonitorRoomDetailInfoS2C', room.GetRoomInfo());
 	});
+
+	if (Entities.get(socket.id) != null) {
+		return;
+    }
 
 	var newEntity = new Entity(socket);
 	Entities.set(socket.id, newEntity);
